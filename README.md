@@ -135,7 +135,7 @@ Base on what you’ve learned until now , create a project of your choosing. Imp
 
 
 ERD:
-<img width="1154" height="764" alt="image" src="https://github.com/user-attachments/assets/5cfcc0e9-4c46-4395-86bc-a77d8c1a1be2" />
+<img width="1095" height="705" alt="image" src="https://github.com/user-attachments/assets/2141b4aa-e67d-4f0c-a022-c7e73eb87c36" />
 
 
 

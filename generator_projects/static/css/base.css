@@ -1,0 +1,113 @@
+
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+@font-face {
+  font-family: "MyFontBold";
+  src: url("../fonts/MangoGrotesque-Bold.woff") format("woff"),
+       url("../fonts/MangoGrotesque-Bold.woff2")  format("woff2"),
+       url("../fonts/MangoGrotesque-BoldItalic.240621-1323.woff")   format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MyFontLight";
+  src: url("../fonts/MangoGrotesque-Light.woff") format("woff"),
+       url("../fonts/MangoGrotesque-Light.woff2")  format("woff2"),
+       url("../fonts/MangoGrotesque-LightItalic.240621-1323.woff")   format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: "MyFontMedium";
+  src: url("../fonts/MangoGrotesque-Medium.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+    --w_color : #faf6e9;
+    --o_color : #e15130;
+    --b_color : #323129;
+    --y_color : #f3bb0f;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: "MyFontMedium";
+    letter-spacing: 1px;
+    overflow-x: hidden;
+    background-color: var(--w_color);
+}
+
+header {
+  z-index: 1001;
+  position: fixed;
+}
+header svg {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    background-color: var(--o_color);
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+header .menu {
+    position: fixed;
+    width: 30vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: end;
+    justify-content: start;
+    padding: 25px;
+    bottom: 0;
+    right: -30vw;
+    transition: all 0.2s ease-in-out;
+    background: none;
+}
+
+header .menu a {
+    text-decoration: none;
+    color: var(--w_color);
+    padding: 10px 15px;
+    background-color: var(--o_color);
+    border-radius: 50px;
+    font-size: 1.5rem;
+}
+
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.blur-overlay .active {
+  opacity: 1;
+  pointer-events: all;
+}

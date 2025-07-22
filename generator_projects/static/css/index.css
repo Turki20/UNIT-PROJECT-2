@@ -1,0 +1,265 @@
+@font-face {
+    font-family: "MyFontBold";
+    src: url("../fonts/MangoGrotesque-Bold.woff") format("woff"),
+        url("../fonts/MangoGrotesque-Bold.woff2") format("woff2"),
+        url("../fonts/MangoGrotesque-BoldItalic.240621-1323.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "MyFontLight";
+    src: url("../fonts/MangoGrotesque-Light.woff") format("woff"),
+        url("../fonts/MangoGrotesque-Light.woff2") format("woff2"),
+        url("../fonts/MangoGrotesque-LightItalic.240621-1323.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: "MyFontMedium";
+    src: url("../fonts/MangoGrotesque-Medium.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --w_color: #faf6e9;
+    --o_color: #e15130;
+    --b_color: #323129;
+    --y_color: #f3bb0f;
+    --p_color: #5546e7;
+}
+
+
+main {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 10% 0 0 0 ;
+}
+
+main .title {
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    font-size: 15rem;
+    color: var(--b_color);
+    text-shadow: 0px -6px var(--p_color), 0px -12px var(--o_color), 0px -18px var(--y_color);
+    transition: all 0.4s 0.2s ease-in-out;
+}
+
+main .main_sections {
+    display: flex;
+    gap: 20px;
+    position: absolute;
+    top: 60%;
+    right: 50%;
+    transform: translateY(-50%) translateX(50%);
+    transition: all 0.4s 0.2s ease-in-out;
+}
+
+main .main_sections>div {
+    width: 20vw;
+    height: 35vh;
+    background-color: var(--b_color);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main .main_sections>div:hover {
+    transform: scale(1.05) translateY(10%);
+    box-shadow: 0px -6px var(--p_color), 0px -12px var(--o_color), 0px -18px var(--y_color);
+
+}
+
+main .main_sections>div:first-child {
+    border-radius: 50% 0 0 0;
+}
+
+main .main_sections>div div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 2rem;
+    color: var(--y_color);
+}
+
+main .main_sections>div:last-child div {
+    color: var(--w_color);
+}
+
+main .main_sections>div div svg {
+    width: 30%;
+    align-self: flex-end;
+}
+
+main .main_sections>div div:last-child {
+    border: 3px solid var(--o_color);
+    padding: 10px;
+    height: 100%;
+    margin-top: 10px;
+    font-size: 1.3rem;
+    color: var(--o_color);
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+main .main_sections>div:last-child div:last-child {
+    border: 3px solid var(--p_color);
+    color: var(--p_color);
+}
+
+
+main .logo {
+    width: 20%;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: rotate(-20deg);
+    transition: all 0.2s 0.6s ease-in-out;
+}
+
+/* 
+<form action="" class="form">
+        <div>
+            <label for="name">
+                Project Name
+            </label>
+            <input type="text" name="name" id="name" placeholder="Enter Project Name">
+        </div>
+        <div id="apps">
+            <button>add app</button>
+            <div>
+                <label for="app">app name</label>
+                <input type="text" name="apps">
+            </div>
+        </div>
+        <div>
+            <button>Next</button>
+        </div>
+    </form> */
+
+button {
+    font-family: "MyFontBold";
+    letter-spacing: 1px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+main .form {
+    width: 50vw;
+    background-color: var(--b_color);
+    border-radius: 5px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--w_color);
+    font-size: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+main .form>div {
+    width: 100%;
+    padding: 20px;
+}
+
+main .form>div:first-child {
+    background-color: var(--p_color);
+    color: var(--w_color);
+}
+
+main .form div:first-child input {
+    background-color: var(--p_color);
+    color: var(--w_color);
+    border-radius: 2px;
+    border: 2px solid var(--w_color);
+    padding: 5px 10px;
+    width: 100%;
+    height: 40px;
+    margin-top: 10px;
+}
+
+main .form #apps {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px -6px var(--p_color), 0px -12px var(--o_color), 0px -18px var(--y_color);
+
+}
+
+main .form #apps button {
+    background-color: var(--p_color);
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    align-self: flex-end;
+    color: var(--b_color);
+    margin-top: 20px;
+}
+
+main .form #apps div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: var(--p_color);
+    margin-top: 20px;
+}
+
+main .form #apps div input {
+    background-color: var(--b_color);
+    color: var(--p_color);
+    border-radius: 2px;
+    border: 2px solid var(--p_color);
+    padding: 5px 10px;
+    width: 100%;
+    height: 40px;
+}
+
+main .form #apps div label {
+    width: 20%;
+}
+main .form div:last-child {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+}
+
+main .form div:last-child button {
+    background-color: var(--y_color);
+    padding: 10px;
+    border-radius: 5px;
+    color: var(--b_color);
+    margin-top: 20px;
+    border: none;
+}
+
+
+.form.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}

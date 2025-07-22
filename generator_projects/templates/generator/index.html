@@ -1,0 +1,71 @@
+{% extends "generator/base.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock style %}
+
+{% block content %}
+
+<main>
+    <span class="title" id="title">
+        Django Bulider
+    </span>
+    <img class="logo" id="logo" src="{% static 'images/logo.png' %}" alt="">
+    <div class="main_sections" id="main_sections">
+        <div onclick="create_project()">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#f3bb0f">
+                    <path
+                        d="M560-320h80v-80h80v-80h-80v-80h-80v80h-80v80h80v80ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h240l80 80h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Zm0-80h640v-400H447l-80-80H160v480Zm0 0v-480 480Z" />
+                </svg>
+                <h3>Create New Project</h3>
+            </div>
+            <div>
+                Start building a new Django project structure with customizable options.
+            </div>
+        </div>
+        <div>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#faf6e9">
+                    <path
+                        d="M240-280h280v-80H240v80Zm400 0h80v-400h-80v400ZM240-440h280v-80H240v80Zm0-160h280v-80H240v80Zm-80 480q-33 0-56.5-23.5T80-200v-560q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v560q0 33-23.5 56.5T800-120H160Zm0-80h640v-560H160v560Zm0 0v-560 560Z" />
+                </svg>
+                <h3>Viwe All Project</h3>
+            </div>
+            <div>
+                Browse all previously created Django project structures.
+            </div>
+        </div>
+    </div>
+
+    <form action="{% url 'generator:add_models_view' %}" method="post" class="form">
+        <div>
+            <label for="name">
+                Project Name
+            </label>
+            <input type="text" name="name" id="name" placeholder="Enter Project Name">
+        </div>
+        {% csrf_token %}
+        <div id="apps">
+            <div>
+                <label for="app">app name</label>
+                <input type="text" name="apps">
+            </div>
+            <button onclick="new_app()">add new app</button>
+        </div>
+        <div>
+            <button>Next</button>
+        </div>
+    </form>
+</main>
+
+{% block js %}
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock js %}
+{% endblock content %}
+
+
+<!-- items = request.POST.getlist('items')
+ -->

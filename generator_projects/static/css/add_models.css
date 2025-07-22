@@ -142,11 +142,11 @@ main .grid_container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 30px;
+    align-items: start;
 }
 
 main .grid_container .grid_card {
     width: 100%;
-    height: auto;
 }
 
 /* chatgpt style */
@@ -164,6 +164,7 @@ main .grid_container .grid_card {
     transition: all 0.3s ease;
 
 }
+
 
 .grid_card:hover {
         box-shadow: 0px -6px var(--p_color), 0px -12px var(--o_color), 0px -18px var(--y_color);
@@ -195,7 +196,7 @@ main .grid_container .grid_card {
     width: 100%;
     padding: 0.6rem 1rem;
     border-radius: 0.5rem;
-    border: 2px solid var(--p_color);
+    border: 2px solid var(--y_color);
     background-color: #2a2924;
     color: var(--w_color);
     font-size: 1rem;
@@ -241,4 +242,55 @@ main .grid_container .grid_card {
 .grid_card button:hover {
     background-color: var(--p_color);
     color: var(--w_color);
+}
+
+
+#relation > div{
+    border: 1px solid var(--o_color);
+}
+
+#relation button{
+    color: var(--b_color);
+    background-color: var(--o_color);
+}
+
+#relation label {
+    color: var(--o_color);
+}
+
+#relation input, #relation select {
+    border: 2px solid var(--o_color);
+}
+
+
+
+
+.grid_card .model_name {
+    color: #5546e7;
+}
+
+.grid_card #model_name {
+    border: 2px solid var(--p_color);
+        color: #5546e7;
+
+}
+
+.grid_card > button:last-child {
+    background-color: var(--p_color);
+    color: var(--b_color);
+    align-self: flex-end;
+}
+
+
+#app > div{
+    border: 1px solid var(--w_color);
+}
+
+
+#app label {
+    color: var(--w_color);
+}
+
+#app input, #app select {
+    border: 2px solid var(--w_color);
 }

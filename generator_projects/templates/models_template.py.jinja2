@@ -1,0 +1,12 @@
+from django.db import models
+
+{% for model in models %}
+class {{ model.name }}(models.Model):
+    {% for field in model.fields %}
+    {{ field.field_name }} = models.{{ field.field_type }}()
+    {% endfor %}{% for relation in model.relations %}
+    {{ relation.with_model }} = models.{{ relation.relation_type }}('{{ relation.with_model }}', on_delete=models.CASCADE)
+    {% endfor %}
+
+
+{% endfor %}

@@ -89,7 +89,7 @@
         </div> -->
 
     </div>
-    <form id="modelsForm" action="{% url 'generator:save_models_view' %}" method="post">
+    <form id="modelsForm" action="{% url 'generator:create_project_view' %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="models" id="modelsInput">
         <input type="hidden" name="project_name" id="project_name">

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'generator_projects',
     'list_projects',
     'core',
+    'github',
 ]
 
 MIDDLEWARE = [

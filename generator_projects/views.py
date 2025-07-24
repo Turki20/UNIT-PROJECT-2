@@ -5,11 +5,18 @@ from scripts.generate_project import Project
 import subprocess
 import os
 
+from question.models import Question
+
 # Create your views here.
 
 def index_view(request:HttpRequest):
     
     return render(request, 'generator/index.html')
+
+def home_view(request:HttpRequest):
+    q = Question.objects.all()[:10]
+    # search for tags ---
+    return render(request, 'generator/home.html', {'questions': q})
 
 def add_models_view(request:HttpRequest):
     if request.method == 'POST':

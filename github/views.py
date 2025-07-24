@@ -1,6 +1,8 @@
 from django.shortcuts import render,  redirect
 from django.http import HttpRequest, HttpResponse
-import requests
+import requests, os, base64, shutil
+from django.conf import settings
+
 
 # بعدين خزنها بشكل سري
 CLIENT_ID = 'Ov23livc34ewoB4lkDc9'
@@ -41,16 +43,43 @@ def github_callback(request:HttpRequest):
     repo_response = requests.post(repo_url, json=repo_data, headers=repo_headers)
     print("Status Code:", repo_response.status_code)
     print("Response JSON:", repo_response.json())
-    # # توليد مشروع Django محليا
-    # os.system("django-admin startproject generated_project")
+    
+    
+    # 3. جلب اسم المستخدم
+    user_response = requests.get("https://api.github.com/user", headers=repo_headers)
+    username = user_response.json().get("login")
 
-    # # رفع الملفات إلى المستودع الجديد باستخدام Git commands
-    # os.chdir("generated_project")
-    # os.system("git init")
-    # os.system("git add .")
-    # os.system('git commit -m "Initial commit"')
-    # repo_clone_url = repo_response.json().get("clone_url").replace("https://", f"https://{access_token}@")
-    # os.system(f"git remote add origin {repo_clone_url}")
-    # os.system("git push -u origin master")
+    # 4. رفع الملفات من مجلد المشروع
+    def upload_file_to_github(file_path, content):
+        url = f"https://api.github.com/repos/{username}/{project_name}/contents/{file_path}"
+        encoded_content = base64.b64encode(content.encode()).decode()
+        data = {
+            "message": f"add {file_path}",
+            "content": encoded_content,
+            "branch": "main"
+        }
+        upload_resp = requests.put(url, json=data, headers=repo_headers)
+        print(f"Uploaded {file_path}: {upload_resp.status_code}")
+
+    project_dir = os.path.join(settings.BASE_DIR, 'user_projects', project_name)
+
+    for root, dirs, files in os.walk(project_dir):
+        for file in files:
+            local_path = os.path.join(root, file)
+            rel_path = os.path.relpath(local_path, project_dir).replace("\\", "/")
+            try:
+                with open(local_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    upload_file_to_github(rel_path, content)
+            except Exception as e:
+                print(f"Error uploading {rel_path}: {e}")
+    
+    # حذف مجلد المشروع بعد الرفع
+    try:
+        shutil.rmtree(project_dir)
+        print(f"Deleted project directory: {project_dir}")
+    except Exception as e:
+        print(f"Error deleting project directory: {e}")
+
 
     return render(request, 'github/index.html', {'repo_response': repo_response})

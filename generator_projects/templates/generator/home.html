@@ -1,0 +1,59 @@
+{% extends "generator/base.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock style %}
+
+{% block content %}
+
+<div id="main">
+    <div id="main_section">
+        <div>
+            <h1>DevCommunity <>
+            </h1>
+            <p>A platform that brings together programmers to share knowledge, code, and solve problems together.</p>
+            <form action="">
+                <input type="text" placeholder="Search...">
+                <button>Search</button>
+            </form>
+        </div>
+        <div>
+            <img src="{% static 'images/developer.png' %}" alt="">
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="question_section">
+            <h1>Last Questions</h1>
+            <div class="q_grid">
+                {% for q in questions %}
+                  <a class="q_card" href="{{q.id}}">
+                    <h3>{{q.title}}</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <em style="font-size: 18px; color: gray;">{{q.created_at}}</em>
+                    </div>
+                    <div>
+                        <span>tag - 1</span>
+                        <span>tag - 2</span>
+                        <span>tag - 3</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+
+        </div>
+        <div class="category_section">
+            <a href="">tag - 1</a>
+            <a href="">tag - 2</a>
+            <a href="">tag - 3</a>
+        </div>
+    </div>
+</div>
+
+{% block js %}
+
+{% endblock js %}
+{% endblock content %}

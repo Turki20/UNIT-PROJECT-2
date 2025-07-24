@@ -17,8 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf.urls.static import static
+from . import settings
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('generator_projects.urls')),
     path('github/', include('github.urls')),
-]
+    path('question/', include('question.urls')),
+    path('answer/', include('answer.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

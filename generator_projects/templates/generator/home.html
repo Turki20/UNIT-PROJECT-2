@@ -29,16 +29,16 @@
             <h1>Last Questions</h1>
             <div class="q_grid">
                 {% for q in questions %}
-                  <a class="q_card" href="{{q.id}}">
-                    <h3>{{q.title}}</h3>
+                  <a class="q_card" href="{% url 'question:question_detail_view' q.question.id %}">
+                    <h3>{{q.question.title}}</h3>
                     
                     <div style="margin-bottom: 20px;">
-                        <em style="font-size: 18px; color: gray;">{{q.created_at}}</em>
+                        <em style="font-size: 18px; color: gray;">{{q.question.created_at}}</em>
                     </div>
                     <div>
-                        <span>tag - 1</span>
-                        <span>tag - 2</span>
-                        <span>tag - 3</span>
+                        {% for tag in q.tags %}
+                            <span>{{tag.name}}</span>
+                        {% endfor %}
                     </div>
                 </a>
                 {% endfor %}
@@ -46,11 +46,16 @@
 
         </div>
         <div class="category_section">
-            <a href="">tag - 1</a>
-            <a href="">tag - 2</a>
-            <a href="">tag - 3</a>
+            <!-- <div></div> -->
+             {% for tag in tags %}
+                <a href="">{{tag.name}}</a>
+             {% endfor %}
         </div>
     </div>
+
+    <footer>
+        <p>Turki Ahmed</p>
+    </footer>
 </div>
 
 {% block js %}

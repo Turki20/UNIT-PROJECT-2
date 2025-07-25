@@ -1,0 +1,33 @@
+{% extends "generator/base.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock style %}
+
+
+{% block content %}
+
+<div id="main">
+    <div class="header">
+        <h1>DevCommunity</h1>
+    </div>
+    <div class="content">
+        <div class="related_questions">
+
+        </div>
+        <div class="question_content">
+
+        </div>
+        <div class="category">
+
+        </div>
+    </div>
+</div>
+
+{% block js %}
+
+{% endblock js %}
+
+{% endblock content %}

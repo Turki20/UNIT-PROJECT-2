@@ -5,7 +5,7 @@ from scripts.generate_project import Project
 import subprocess
 import os
 
-from question.models import Question
+from question.models import Question, Tag
 
 # Create your views here.
 
@@ -14,9 +14,15 @@ def index_view(request:HttpRequest):
     return render(request, 'generator/index.html')
 
 def home_view(request:HttpRequest):
-    q = Question.objects.all()[:10]
+    questions = Question.objects.all()[:10]
+    final_list = []
+    for q in questions:
+        tags = Tag.objects.filter(many_to_many__id = q.id)
+        final_list.append({'question': q, 'tags': tags})
+    
+    tags = Tag.objects.all()[:10]
     # search for tags ---
-    return render(request, 'generator/home.html', {'questions': q})
+    return render(request, 'generator/home.html', {'questions': final_list, 'tags': tags})
 
 def add_models_view(request:HttpRequest):
     if request.method == 'POST':

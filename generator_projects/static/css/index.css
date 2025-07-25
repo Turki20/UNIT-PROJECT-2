@@ -287,9 +287,8 @@ main .form div:last-child button {
     align-items: center;
     color: var(--w_color);
     background-color: var(--b_color);
-    z-index: 1000;
-    box-shadow: 0px 6px var(--p_color), 0px 12px var(--o_color), 0px 18px var(--y_color);
-
+    z-index: 500;
+    box-shadow: 0px 6px var(--p_color), 0px 12px var(--o_color), 0px 18px var(--y_color); 
 }
 #main #main_section > div {
     padding: 50px;
@@ -347,20 +346,20 @@ main .form div:last-child button {
 .container {
     width: 100%;
     height: auto;
-    padding: 70px 50px;
+    /* padding: 70px 50px; */
     display: flex;
     justify-content: center;
     align-items: start;
-    gap: 20px;
-    background-color: var(--b_color);
+    /* gap: 20px; */
+    background-color: var(--o_color);
 }
 
 .container .question_section {
     width: 70%;
-    background-color: var(--wh_color);
+    background-color: var(--w_color);
     /* box-shadow: 1px 1px 5px lightgray; */
-    border-radius: 10px;
-    padding: 40px 30px;
+    /* border-radius: 10px; */
+    padding: 60px 30px;
     position: relative;
 }
 
@@ -374,6 +373,7 @@ main .form div:last-child button {
     background-color: var(--o_color);
     border-radius: 10px;
     color: var(--wh_color);
+    z-index: 501;
 }
 
 .container .question_section .q_grid {
@@ -417,10 +417,9 @@ main .form div:last-child button {
 
 .container .category_section {
     width: 30%;
-    background-color: var(--y_color);
+    background-color: var(--o_color);
     color: var(--b_color);
-    border-radius: 10px;
-    padding: 20px 30px;
+    padding: 60px 30px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     flex-direction: column;
@@ -428,7 +427,10 @@ main .form div:last-child button {
     align-items: center;
     gap: 20px;
     font-size: 2rem;
+    position: relative;
+
 }
+
 .container .category_section a {
     padding: 20px;
     background-color: var(--b_color);
@@ -437,12 +439,49 @@ main .form div:last-child button {
     width: 100%;
     border-radius: 50px;
     text-align: center;
+
 }
 
 .container .category_section a:nth-child(2){
-    background-color: var(--o_color);
+    background-color: var(--y_color);
+    color: var(--o_color);
 }
 
 .container .category_section a:last-child{
     background-color: var(--p_color);
+}
+
+#main footer {
+    width: 100%;
+    background-color: var(--b_color);
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: var(--y_color);
+    box-shadow: 0px -6px var(--p_color), 0px -12px var(--o_color), 0px -18px var(--y_color);
+    z-index: 501;
+}
+
+/* detail page  */
+#main .header {
+    width: 100vw;
+    height: 100px;
+    display: flex;
+    justify-content: start;
+    align-items: end;
+    background-color: var(--p_color);
+    box-shadow: 0px 6px var(--p_color), 0px 12px var(--o_color), 0px 18px var(--y_color);
+    font-size: 2rem;
+    color: var(--w_color);
+    transform: skewY(1deg);
+    position: absolute;
+    padding: 10px 30px;
+    top: -13px;
+}
+
+#main .header h1 {
+    transform: skewY(-1deg);
+
 }

@@ -40,6 +40,8 @@
     --o_color : #e15130;
     --b_color : #323129;
     --y_color : #f3bb0f;
+    --p_color: #5546e7;
+
 }
 
 body {
@@ -91,6 +93,17 @@ header .menu a {
     background-color: var(--o_color);
     border-radius: 50px;
     font-size: 1.5rem;
+}
+
+header .menu #django {
+    color: var(--w_color);
+    background-color: var(--b_color);
+    transition: all 0.2s ease-in-out;
+  }
+
+header .menu #django:hover {
+  transform: scale(0.95);
+  box-shadow: 4px 4px var(--p_color), 8px 8px var(--o_color), 12px 12px var(--y_color);
 }
 
 .blur-overlay {

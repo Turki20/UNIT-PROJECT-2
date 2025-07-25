@@ -2,35 +2,50 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/an-old-hope.min.css" integrity="sha512-t47CjkEB5hx4FojnE73dBLwgrgvLBpgsHvB40ycK3cYPkLwEp7qNHyRpRDA3/zVVAAOUPJwbMVJq3uJrBqpHVQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
     {% block style %}
-      
+
     {% endblock style %}
     <title>Django Builder</title>
 </head>
+
 <body>
     <header style="display: block;">
-        <svg id="menu_btn" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg>
+        <svg id="menu_btn" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+            fill="#FFFFFF">
+            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+        </svg>
         <div class="menu" id="menu_list">
-            <a href="">home</a>
+            <a href="{% url 'generator:home_view' %}">home</a>
             <a href="">about</a>
             <a href="">create new project</a>
             <a href="">contact us</a>
-            <a href="">github login</a>
+            <a id="django" href="{% url 'generator:index_view' %}">Django Builder</a>
         </div>
     </header>
-     
+
     {% block content %}
-      
+
     {% endblock content %}
     <div id="blur-overlay" class="blur-overlay">
     </div>
     <script src="{% static 'js/base.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    
     {% block js %}
-      
+
     {% endblock js %}
 </body>
+
 </html>

@@ -15,15 +15,87 @@
     </div>
     <div class="content">
         <div class="related_questions">
-
+            {% for q in related_questions %}
+              <a href="{% url 'question:question_detail_view' q.id %}">
+                {{q.title}}
+              </a>
+            {% endfor %}
         </div>
-        <div class="question_content">
 
+        <div class="question_content">
+            <div class="question">
+                <h1>{{q.title}}</h1>
+                <p>by: {{q.user_name}}</p>
+                <div class="tags">
+                    {% for tag in tags %}
+                      <a href="">{{tag.name}}</a>
+                    {% endfor %}
+                </div>
+
+                <div class="question_parts">
+                    {% for part in quesetion_parts %}
+                    <div>
+                      {% if part.part_type == 'text' %}
+                        <p>
+                            {{part.content}}
+                        </p>
+                      {% endif %}
+                      {% if part.part_type == 'cpde' %}
+                            <pre class="theme-an-old-hope" style="margin: 0; padding: 0; max-height: auto;">
+                                <code class="language-python" style="margin: 0;">{{part.content|escape }}
+                                </code>
+                            </pre>
+                      {% endif %}
+                      {% if part.part_type == 'image' %}
+                        <img src="{{part.image.url}}" alt="">
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+                    <em>{{q.created_at}}</em>
+                </div>
+
+            </div>
+
+            {% for answer in  final_anwers %}
+            <div class="answers">
+
+                <div class="question_parts answer">
+                    <span>By: <strong>{{answer.answer.user_name}}</strong></span>
+                    {% for part in answer.answers_parts %}
+                    <div>
+                      {% if part.part_type == 'text' %}
+                        <p>
+                            {{part.content}}
+                        </p>
+                      {% endif %}
+                      {% if part.part_type == 'cpde' %}
+                            <pre class="theme-atom-one-dark">
+                                <code class="">{{part.content|escape }}</code>
+                            </pre>
+                      {% endif %}
+                      {% if part.part_type == 'image' %}
+                        <img src="{{part.image.url}}" alt="">
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <em>{{answer.answer.created_at}}</em>
+                </div>
+
+            </div>  
+            {% endfor %}
+            
         </div>
         <div class="category">
-
+            {% for tag in all_tags %}
+                <a href="">{{tag.name}}</a>
+            {% endfor %}
         </div>
     </div>
+
+    <footer>
+        <p>Turki Ahmed</p>
+    </footer>
 </div>
 
 {% block js %}

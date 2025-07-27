@@ -8,6 +8,9 @@ class Question(models.Model):
     user_name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return self.title
+    
 class QuestionPart(models.Model):
     
     class ContentChoice(models.TextChoices):
@@ -29,3 +32,6 @@ class QuestionPart(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=255)
     many_to_many = models.ManyToManyField(Question)
+    
+    def __str__(self):
+        return self.name

@@ -4,101 +4,322 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
+<style>
+  #answerForm {
+    width: 100%;
+  }
+
+  #editor {
+    border: 1px solid #ccc;
+    min-height: 200px;
+    padding: 10px;
+    outline: none;
+    white-space: pre-wrap;
+    width: 100%;
+  }
+
+  .code-block {
+    background-color: #f4f4f4;
+    padding: 10px;
+    margin: 5px 0;
+    font-family: monospace;
+    white-space: pre-wrap;
+  }
+
+  .image-block {
+    margin: 10px 0;
+    width: 100%;
+  }
+</style>
 {% endblock style %}
 
 
 {% block content %}
 
 <div id="main">
-    <div class="header">
-        <h1>DevCommunity</h1>
+  <div class="header">
+    <h1>DevCommunity</h1>
+  </div>
+  <div class="content">
+    <div class="related_questions">
+      {% for q in related_questions %}
+      <a href="{% url 'question:question_detail_view' q.id %}">
+        {{q.title}}
+      </a>
+      {% endfor %}
     </div>
-    <div class="content">
-        <div class="related_questions">
-            {% for q in related_questions %}
-              <a href="{% url 'question:question_detail_view' q.id %}">
-                {{q.title}}
-              </a>
-            {% endfor %}
+
+    <div class="question_content">
+      <div class="question">
+        <h1>{{q.title}}</h1>
+        <p>by: {{q.user_name}}</p>
+        <div class="tags">
+          {% for tag in tags %}
+          <a href="">{{tag.name}}</a>
+          {% endfor %}
         </div>
 
-        <div class="question_content">
-            <div class="question">
-                <h1>{{q.title}}</h1>
-                <p>by: {{q.user_name}}</p>
-                <div class="tags">
-                    {% for tag in tags %}
-                      <a href="">{{tag.name}}</a>
-                    {% endfor %}
-                </div>
-
-                <div class="question_parts">
-                    {% for part in quesetion_parts %}
-                    <div>
-                      {% if part.part_type == 'text' %}
-                        <p>
-                            {{part.content}}
-                        </p>
-                      {% endif %}
-                      {% if part.part_type == 'cpde' %}
-                            <pre class="theme-an-old-hope" style="margin: 0; padding: 0; max-height: auto;">
+        <div class="question_parts">
+          {% for part in quesetion_parts %}
+          <div>
+            {% if part.part_type == 'text' %}
+            <p>
+              {{part.content}}
+            </p>
+            {% endif %}
+            {% if part.part_type == 'cpde' %}
+            <pre class="theme-an-old-hope" style="margin: 0; padding: 0; max-height: auto;">
                                 <code class="language-python" style="margin: 0;">{{part.content|escape }}
                                 </code>
                             </pre>
-                      {% endif %}
-                      {% if part.part_type == 'image' %}
-                        <img src="{{part.image.url}}" alt="">
-                      {% endif %}
-                    </div>
-                    {% endfor %}
-                    <em>{{q.created_at}}</em>
-                </div>
+            {% endif %}
+            {% if part.part_type == 'image' %}
+            <img src="{{part.image.url}}" alt="">
+            {% endif %}
+          </div>
+          {% endfor %}
+          <em>{{q.created_at}}</em>
+        </div>
 
-            </div>
+      </div>
 
-            {% for answer in  final_anwers %}
-            <div class="answers">
+      {% for answer in final_anwers %}
+      <div class="answers">
 
-                <div class="question_parts answer">
-                    <span>By: <strong>{{answer.answer.user_name}}</strong></span>
-                    {% for part in answer.answers_parts %}
-                    <div>
-                      {% if part.part_type == 'text' %}
-                        <p>
-                            {{part.content}}
-                        </p>
-                      {% endif %}
-                      {% if part.part_type == 'cpde' %}
-                            <pre class="theme-atom-one-dark">
+        <div class="question_parts answer">
+          <span>By: <strong>{{answer.answer.user_name}}</strong></span>
+          {% for part in answer.answers_parts %}
+          <div>
+            {% if part.part_type == 'text' %}
+            <p>
+              {{part.content}}
+            </p>
+            {% endif %}
+            {% if part.part_type == 'cpde' %}
+            <pre class="theme-atom-one-dark">
                                 <code class="">{{part.content|escape }}</code>
                             </pre>
-                      {% endif %}
-                      {% if part.part_type == 'image' %}
-                        <img src="{{part.image.url}}" alt="">
-                      {% endif %}
-                    </div>
-                    {% endfor %}
+            {% endif %}
+            {% if part.part_type == 'image' %}
+            <img src="{{part.image.url}}" alt="">
+            {% endif %}
+          </div>
+          {% endfor %}
 
-                    <em>{{answer.answer.created_at}}</em>
-                </div>
+          <em>{{answer.answer.created_at}}</em>
+        </div>
 
-            </div>  
-            {% endfor %}
-            
-        </div>
-        <div class="category">
-            {% for tag in all_tags %}
-                <a href="">{{tag.name}}</a>
-            {% endfor %}
-        </div>
+
+
+      </div>
+      {% endfor %}
+      <div class="question_parts">
+        <h2>Answer Editor</h2>
+
+        <form id="answerForm">
+          <input type="text" name="user_name" placeholder="Your Name" required><br><br>
+
+          <div id="editor" contenteditable="true"></div>
+
+          <br>
+          <button type="button" onclick="insertCode()">Insert Code</button>
+          <button type="button" onclick="insertImage()">Insert Image</button>
+          <br><br>
+
+          <button type="submit">Send Answer</button>
+        </form>
+      </div>
     </div>
+    <div class="category">
+      {% for tag in all_tags %}
+      <a href="">{{tag.name}}</a>
+      {% endfor %}
+    </div>
+  </div>
 
-    <footer>
-        <p>Turki Ahmed</p>
-    </footer>
+  <footer>
+    <p>Turki Ahmed</p>
+  </footer>
 </div>
 
 {% block js %}
+
+<script>
+  function insertCode() {
+    const code = prompt("Enter your code:");
+    if (code) {
+      const wrapper = document.createElement('div');
+      wrapper.setAttribute('data-type', 'code');
+      wrapper.setAttribute('data-lang', 'ini'); // أو اجعلها ديناميكية لاحقًا
+
+      // زر الحذف
+      const closeBtn = document.createElement('span');
+      closeBtn.textContent = '×';
+      closeBtn.style.cssText = 'float: right; cursor: pointer; color: red;';
+      closeBtn.onclick = () => wrapper.remove();
+
+      // عنصر <pre><code>
+      const pre = document.createElement('pre');
+      pre.className = 'theme-atom-one-dark';
+
+      const codeEl = document.createElement('code');
+      codeEl.className = 'hljs language-ini';
+      codeEl.setAttribute('data-highlighted', 'yes');
+      codeEl.textContent = code;
+
+      pre.appendChild(codeEl);
+      wrapper.appendChild(closeBtn);
+      wrapper.appendChild(document.createElement('br'));
+      wrapper.appendChild(pre);
+
+      insertElementAtCursor(wrapper, true);
+    }
+  }
+
+
+
+  function insertImage() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = () => {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute('data-type', 'image');
+        wrapper.setAttribute('data-name', file.name);
+        wrapper.className = 'image-block';
+
+        // زر الحذف
+        const closeBtn = document.createElement('span');
+        closeBtn.textContent = '×';
+        closeBtn.style.cssText = 'float: right; cursor: pointer; color: red;';
+        closeBtn.onclick = () => wrapper.remove();
+
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.maxWidth = '100%';
+
+        wrapper.appendChild(closeBtn);
+        wrapper.appendChild(img);
+
+        insertElementAtCursor(wrapper, true);
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+
+  function insertElementAtCursor(el, appendBreakAfter = false) {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(el);
+
+    // إضافة <br> لتسهيل الكتابة بعد العنصر
+    if (appendBreakAfter) {
+      const br = document.createElement('div');
+      br.innerHTML = '<br>';
+      el.parentNode.insertBefore(br, el.nextSibling);
+
+      // إعادة المؤشر
+      const newRange = document.createRange();
+      newRange.setStart(br, 0);
+      newRange.collapse(true);
+
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+    }
+  }
+
+  // Handle form submit
+  document.getElementById('answerForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const userName = this.user_name.value;
+    const editor = document.getElementById('editor');
+    const children = editor.childNodes;
+
+    const parts = [];
+    let order = 0;
+
+    children.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ELEMENT_NODE && node.tagName === "DIV" && !node.dataset.type) {
+        // plain text or paragraphs
+        if (node.textContent.trim()) {
+          parts.push({
+            part_type: 'text',
+            content: node.textContent,
+            image: null,
+            lang: null,
+            order: order++
+          });
+        }
+      } else if (node.dataset?.type === 'code') {
+        parts.push({
+          part_type: 'cpde',
+          content: node.textContent,
+          image: null,
+          lang: node.dataset.lang || 'python',
+          order: order++
+        });
+      } else if (node.tagName === 'IMG' && node.dataset?.type === 'image') {
+        parts.push({
+          part_type: 'image',
+          content: '',
+          image: node.src,
+          lang: null,
+          name: node.dataset.name,
+          order: order++
+        });
+      }
+    });
+
+    console.log({ user_name: userName, parts });
+
+    // send to backend using fetch
+    fetch('/submit-answer/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({
+        user_name: userName,
+        question_id: 1, // املأها حسب السياق
+        parts: parts
+      })
+    }).then(res => {
+      if (res.ok) {
+        alert('Answer submitted!');
+        editor.innerHTML = '';
+      } else {
+        alert('Error!');
+      }
+    });
+  });
+
+  // Get CSRF token
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        const trimmed = cookie.trim();
+        if (trimmed.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(trimmed.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
 
 {% endblock js %}
 

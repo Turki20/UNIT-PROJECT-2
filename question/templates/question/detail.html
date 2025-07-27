@@ -4,33 +4,7 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
-<style>
-  #answerForm {
-    width: 100%;
-  }
 
-  #editor {
-    border: 1px solid #ccc;
-    min-height: 200px;
-    padding: 10px;
-    outline: none;
-    white-space: pre-wrap;
-    width: 100%;
-  }
-
-  .code-block {
-    background-color: #f4f4f4;
-    padding: 10px;
-    margin: 5px 0;
-    font-family: monospace;
-    white-space: pre-wrap;
-  }
-
-  .image-block {
-    margin: 10px 0;
-    width: 100%;
-  }
-</style>
 {% endblock style %}
 
 
@@ -113,20 +87,24 @@
 
       </div>
       {% endfor %}
-      <div class="question_parts">
+      <div class="question_parts" style="margin-top: 20px;">
         <h2>Answer Editor</h2>
 
-        <form id="answerForm">
-          <input type="text" name="user_name" placeholder="Your Name" required><br><br>
+        <form id="customForm" method="post" onsubmit="handleSubmit(event)" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label for="name">Enter Your Name:</label>
+          <input class="input" type="text" name="user_name" placeholder="Enter Your Name..." id="name" required>
+          <div>
+            <button type="button" onclick="addText()" class="button">Add Text</button>
+            <button type="button" onclick="addCode()" class="button">ِAdd Code</button>
+            <button type="button" onclick="addImage()" class="button">Add Image</button>
+          </div>
 
-          <div id="editor" contenteditable="true"></div>
+          <div id="contentContainer"></div>
 
+          <input type="hidden" name="content_json" id="contentJson">
           <br>
-          <button type="button" onclick="insertCode()">Insert Code</button>
-          <button type="button" onclick="insertImage()">Insert Image</button>
-          <br><br>
-
-          <button type="submit">Send Answer</button>
+          <button type="submit" class="btn-submit">Submit</button>
         </form>
       </div>
     </div>
@@ -143,183 +121,95 @@
 </div>
 
 {% block js %}
-
 <script>
-  function insertCode() {
-    const code = prompt("Enter your code:");
-    if (code) {
-      const wrapper = document.createElement('div');
-      wrapper.setAttribute('data-type', 'code');
-      wrapper.setAttribute('data-lang', 'ini'); // أو اجعلها ديناميكية لاحقًا
+let orderCounter = 0;
 
-      // زر الحذف
-      const closeBtn = document.createElement('span');
-      closeBtn.textContent = '×';
-      closeBtn.style.cssText = 'float: right; cursor: pointer; color: red;';
-      closeBtn.onclick = () => wrapper.remove();
+function createWrapper(type) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'content-item';
+  wrapper.dataset.type = type;
+  wrapper.dataset.order = orderCounter++;
 
-      // عنصر <pre><code>
-      const pre = document.createElement('pre');
-      pre.className = 'theme-atom-one-dark';
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = '✕';
+  deleteBtn.onclick = () => wrapper.remove();
 
-      const codeEl = document.createElement('code');
-      codeEl.className = 'hljs language-ini';
-      codeEl.setAttribute('data-highlighted', 'yes');
-      codeEl.textContent = code;
+  wrapper.appendChild(deleteBtn);
+  return wrapper;
+}
 
-      pre.appendChild(codeEl);
-      wrapper.appendChild(closeBtn);
-      wrapper.appendChild(document.createElement('br'));
-      wrapper.appendChild(pre);
+function addText() {
+  const wrapper = createWrapper('text');
+  const textarea = document.createElement('textarea');
+  textarea.placeholder = 'text...';
+  wrapper.appendChild(textarea);
+  document.getElementById('contentContainer').appendChild(wrapper);
+}
 
-      insertElementAtCursor(wrapper, true);
-    }
-  }
+function addCode() {
+  const wrapper = createWrapper('code');
+  const textarea = document.createElement('textarea');
+  textarea.placeholder = 'code...';
+  textarea.className = 'code-block';
+  wrapper.appendChild(textarea);
+  document.getElementById('contentContainer').appendChild(wrapper);
+}
 
+function addImage() {
+  const wrapper = createWrapper('image');
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
 
+  input.onchange = () => {
+    const file = input.files[0];
+    if (!file) return;
 
-  function insertImage() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = () => {
-      const file = input.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const wrapper = document.createElement('div');
-        wrapper.setAttribute('data-type', 'image');
-        wrapper.setAttribute('data-name', file.name);
-        wrapper.className = 'image-block';
-
-        // زر الحذف
-        const closeBtn = document.createElement('span');
-        closeBtn.textContent = '×';
-        closeBtn.style.cssText = 'float: right; cursor: pointer; color: red;';
-        closeBtn.onclick = () => wrapper.remove();
-
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.style.maxWidth = '100%';
-
-        wrapper.appendChild(closeBtn);
-        wrapper.appendChild(img);
-
-        insertElementAtCursor(wrapper, true);
-      };
-      reader.readAsDataURL(file);
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.style.maxWidth = '200px';
+      img.style.display = 'block';
+      wrapper.appendChild(img);
+      wrapper.dataset.value = e.target.result;
     };
-    input.click();
-  }
+    reader.readAsDataURL(file);
+  };
 
-  function insertElementAtCursor(el, appendBreakAfter = false) {
-    const sel = window.getSelection();
-    if (!sel.rangeCount) return;
+  wrapper.appendChild(input);
+  document.getElementById('contentContainer').appendChild(wrapper);
+}
 
-    const range = sel.getRangeAt(0);
-    range.deleteContents();
-    range.insertNode(el);
+function handleSubmit(e) {
+  e.preventDefault();
 
-    // إضافة <br> لتسهيل الكتابة بعد العنصر
-    if (appendBreakAfter) {
-      const br = document.createElement('div');
-      br.innerHTML = '<br>';
-      el.parentNode.insertBefore(br, el.nextSibling);
+  const items = document.querySelectorAll('.content-item');
+  const result = [];
 
-      // إعادة المؤشر
-      const newRange = document.createRange();
-      newRange.setStart(br, 0);
-      newRange.collapse(true);
+  items.forEach((item, index) => {
+    const type = item.dataset.type;
+    const order = index;
+    let value = '';
 
-      sel.removeAllRanges();
-      sel.addRange(newRange);
+    if (type === 'text' || type === 'code') {
+      value = item.querySelector('textarea').value;
+    } else if (type === 'image') {
+      value = item.dataset.value || '';
     }
-  }
 
-  // Handle form submit
-  document.getElementById('answerForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const userName = this.user_name.value;
-    const editor = document.getElementById('editor');
-    const children = editor.childNodes;
-
-    const parts = [];
-    let order = 0;
-
-    children.forEach((node) => {
-      if (node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ELEMENT_NODE && node.tagName === "DIV" && !node.dataset.type) {
-        // plain text or paragraphs
-        if (node.textContent.trim()) {
-          parts.push({
-            part_type: 'text',
-            content: node.textContent,
-            image: null,
-            lang: null,
-            order: order++
-          });
-        }
-      } else if (node.dataset?.type === 'code') {
-        parts.push({
-          part_type: 'cpde',
-          content: node.textContent,
-          image: null,
-          lang: node.dataset.lang || 'python',
-          order: order++
-        });
-      } else if (node.tagName === 'IMG' && node.dataset?.type === 'image') {
-        parts.push({
-          part_type: 'image',
-          content: '',
-          image: node.src,
-          lang: null,
-          name: node.dataset.name,
-          order: order++
-        });
-      }
-    });
-
-    console.log({ user_name: userName, parts });
-
-    // send to backend using fetch
-    fetch('/submit-answer/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': getCookie('csrftoken'),
-      },
-      body: JSON.stringify({
-        user_name: userName,
-        question_id: 1, // املأها حسب السياق
-        parts: parts
-      })
-    }).then(res => {
-      if (res.ok) {
-        alert('Answer submitted!');
-        editor.innerHTML = '';
-      } else {
-        alert('Error!');
-      }
-    });
+    result.push({ type, value, order });
   });
 
-  // Get CSRF token
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let cookie of cookies) {
-        const trimmed = cookie.trim();
-        if (trimmed.startsWith(name + '=')) {
-          cookieValue = decodeURIComponent(trimmed.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
+  // أرسلها للباك إند في حقل مخفي
+  document.getElementById('contentJson').value = JSON.stringify(result);
+
+  // ثم يمكنك إرسال الفورم الآن
+  e.target.submit();
+}
 </script>
+
+
 
 {% endblock js %}
 

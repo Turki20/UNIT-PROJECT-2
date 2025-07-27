@@ -1,12 +1,33 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
-
+import json
 from .models import Question, Tag, QuestionPart
 from answer.models import Answer, AnswerVote, AnswerPart
 # Create your views here.
+import base64
+import uuid
+from django.core.files.base import ContentFile
+
 
 def question_detail_view(request:HttpRequest, q_id:int):
     quesetion = Question.objects.get(id = q_id)
+    if request.method == 'POST':
+        content_json = request.POST['content_json']
+        content_list = json.loads(content_json)
+        new_answer = Answer(question_id = quesetion, user_name = request.POST.get('user_name'))
+        new_answer.save()
+        print(content_list)
+        for i in content_list:
+            if i['type'] == 'code':
+                AnswerPart(answer_id = new_answer, part_type = 'cpde',content = i['value'] ,order=i['order']).save()
+            if i['type'] == 'text':
+                AnswerPart(answer_id = new_answer, part_type = 'text',content = i['value'] ,order=i['order']).save()
+            if i['type'] == 'image':
+                format, imgstr = i['value'].split(';base64,')
+                ext = format.split('/')[-1]
+                image_file = ContentFile(base64.b64decode(imgstr), name=f'{uuid.uuid4()}.{ext}')
+                AnswerPart(answer_id = new_answer, part_type = 'image', content = ' ' ,image = image_file,order=i['order']).save()
+                
     quesetion_parts = QuestionPart.objects.filter(question_id = quesetion.id).order_by('order')
     tags = Tag.objects.filter(many_to_many__id = quesetion.id)
     
@@ -30,114 +51,3 @@ def question_detail_view(request:HttpRequest, q_id:int):
     }
     
     return render(request, 'question/detail.html', context)
-
-import random
-from django.utils import timezone
-from question.models import Question, QuestionPart, Tag
-from answer.models import Answer, AnswerPart, AnswerVote
-
-# حذف البيانات القديمة إذا أردت
-# Question.objects.all().delete()
-# Answer.objects.all().delete()
-# QuestionPart.objects.all().delete()
-# AnswerPart.objects.all().delete()
-# AnswerVote.objects.all().delete()
-# Tag.objects.all().delete()
-
-def data():
-    # ✅ إنشاء تاقات حقيقية
-    tags_data = ["Django", "Python", "API", "HTML", "CSS", "JavaScript", "Database", "Model", "View", "Template"]
-    tags = []
-    for tag_name in tags_data:
-        tag = Tag.objects.create(name=tag_name)
-        tags.append(tag)
-
-    # ✅ بيانات أسئلة حقيقية
-    questions_data = [
-        {
-            "title": "How to create a model in Django?",
-            "user_name": "ahmed_dev",
-            "parts": [
-                {"type": "text", "content": "I want to create a model for storing blog posts. How to do it?"},
-                {"type": "cpde", "content": "from django.db import models\n\nclass Post(models.Model):\n    title = models.CharField(max_length=255)\n    content = models.TextField()\n    created_at = models.DateTimeField(auto_now_add=True)", "lang": "python"}
-            ]
-        },
-        {
-            "title": "What is REST API?",
-            "user_name": "sara_code",
-            "parts": [
-                {"type": "text", "content": "Can someone explain REST API in simple words?"}
-            ]
-        },
-        {
-            "title": "How to center a div in CSS?",
-            "user_name": "mohammed_css",
-            "parts": [
-                {"type": "text", "content": "I struggle with centering divs. What is the easiest way?"},
-                {"type": "cpde", "content": "div {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}", "lang": "css"}
-            ]
-        }
-    ]
-
-    # ✅ إنشاء الأسئلة وأجزائها
-    for q_index, q_data in enumerate(questions_data):
-        question = Question.objects.create(
-            title=q_data["title"],
-            user_name=q_data["user_name"],
-            created_at=timezone.now()
-        )
-        
-        # إضافة تاقات عشوائية لكل سؤال
-        
-        # إضافة أجزاء السؤال
-        for order, part in enumerate(q_data["parts"], start=1):
-            QuestionPart.objects.create(
-                question_id=question,
-                part_type=part["type"],
-                content=part["content"],
-                lang=part.get("lang"),
-                order=order
-            )
-        
-        # ✅ إنشاء إجابات حقيقية لكل سؤال
-        answers_data = [
-            {
-                "user_name": "dev_helper",
-                "parts": [
-                    {"type": "text", "content": f"This is a helpful answer to: {q_data['title']}"}
-                ]
-            },
-            {
-                "user_name": "coder_pro",
-                "parts": [
-                    {"type": "text", "content": "Here is another explanation with code:"},
-                    {"type": "cpde", "content": "# Sample code snippet\nprint('Always test your code!')", "lang": "python"}
-                ]
-            }
-        ]
-        
-        for a_index, a_data in enumerate(answers_data):
-            answer = Answer.objects.create(
-                question_id=question,
-                user_name=a_data["user_name"],
-                created_at=timezone.now()
-            )
-            
-            for order, part in enumerate(a_data["parts"], start=1):
-                AnswerPart.objects.create(
-                    answer_id=answer,
-                    part_type=part["type"],
-                    content=part["content"],
-                    lang=part.get("lang"),
-                    order=order
-                )
-            
-            # ✅ إضافة تصويتات حقيقية عشوائية
-            for v in range(random.randint(2, 5)):
-                AnswerVote.objects.create(
-                    user_name=f"user_vote_{random.randint(1,100)}",
-                    answer_id=answer,
-                    value=random.choice([1, -1])
-                )
-
-    print("✅ Realistic data generation completed successfully.")

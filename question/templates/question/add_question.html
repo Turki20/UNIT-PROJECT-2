@@ -19,25 +19,40 @@
     <div class="ask_question_container">
         <h1>Ask Question</h1>
         <div class="question_card">
-            <form method="post" action="" id="add_form">
+            <form method="post" action="" id="add_form" enctype="multipart/form-data">
+                {% csrf_token %}
                 <label for="name">Your Name</label>
                 <input type="text" name="name" id="name" required placeholder="Enter Your Name">
 
                 <label for="title">Question Title</label>
                 <input type="text" name="title" id="title" required placeholder="Title">
 
+                <label for="tag">Add Tags</label>
+                <div>
+                    <button id="button" type="button" onclick="clear_tags()">Clear</button>
+                    <div class="tags" id="question_tag">
+                    
+                    </div>
+                    <input type="hidden" name="tags" id="tag_input">
+                </div>
+                <select id="Tag" oninput="add_tag(this)">
+                    {% for tag in all_tags %}
+                      <option value="{{tag.name}}">{{tag.name}}</option>
+                    {% endfor %}
+                </select>
+
                 <input type="hidden" name="content_json" id="contentJson">
                 <div class="btns">
-                    <button onclick="add_text()">Add Text</button>
-                    <button onclick="add_code()">Add Code</button>
-                    <button onclick="add_img()">Add Image</button>
+                    <button type="button" onclick="add_text()">Add Text</button>
+                    <button type="button" onclick="add_code()">Add Code</button>
+                    <button type="button" onclick="add_img()">Add Image</button>
                 </div>
 
                 <div id="form_content">
-                    
+
                 </div>
 
-                <button onclick="submit_form()">Ask</button>
+                <button type="button" onclick="submit_form()">Ask</button>
             </form>
         </div>
     </div>
@@ -51,12 +66,12 @@
 <script>
 
     form_content = document.querySelector('#form_content');
-    
-    function remove_el(el){
+
+    function remove_el(el) {
         el.parentElement.remove()
     }
 
-    function createWrapper(){
+    function createWrapper() {
         div = document.createElement('div')
         span = document.createElement('span')
         span.setAttribute('onclick', 'remove_el(this)')
@@ -67,7 +82,7 @@
         return div
     }
 
-    function add_code(){
+    function add_code() {
         div = createWrapper()
         div.setAttribute('id', 'code')
         textarea = document.createElement('textarea')
@@ -78,7 +93,7 @@
         form_content.appendChild(div)
     }
 
-    function add_text(){
+    function add_text() {
         div = createWrapper()
         div.setAttribute('id', 'text')
         textarea = document.createElement('textarea')
@@ -89,21 +104,33 @@
         form_content.appendChild(div)
     }
 
-    function add_img(){
+    function add_img() {
         div = createWrapper()
         div.setAttribute('id', 'img')
         input = document.createElement('input')
         input.setAttribute('type', 'file')
+        input.accept = 'image/*';
         div.appendChild(input)
+
         form_content.appendChild(div)
     }
 
-    function submit_form(){
+    function toBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result); // يحتوي على "data:image/png;base64,..."
+            reader.onerror = reject;
+        });
+    }
+
+
+    async function submit_form() {
         all = form_content.children
         obj_list = []
         order = 0
-        for(i = 0; i < all.length; i++){
-            if(all[i].id == 'text'){
+        for (i = 0; i < all.length; i++) {
+            if (all[i].id == 'text') {
                 temp = {
                     'type': 'text',
                     'value': all[i].lastChild.value,
@@ -111,7 +138,7 @@
                 }
                 obj_list.push(temp)
             }
-            if(all[i].id == 'code'){
+            if (all[i].id == 'code') {
                 temp = {
                     'type': 'code',
                     'value': all[i].lastChild.value,
@@ -119,20 +146,47 @@
                 }
                 obj_list.push(temp)
             }
-            if(all[i].id == 'img'){
-                temp = {
-                    'type': 'img',
-                    'value': all[i].lastChild.value,
-                    'order': order++
+            if (all[i].id == 'img') {
+                let file = all[i].lastChild.files[0];
+                if (file) {
+                    let base64 = await toBase64(file);
+                    obj_list.push({
+                        type: 'img',
+                        value: base64,
+                        order: order++
+                    });
                 }
-                obj_list.push(temp)
-            }         
+            }
         }
 
+        all_tags = []
+        
+        ch = document.querySelector('#question_tag').children
+        for(i = 0; i < ch.length; i++) {
+            all_tags.push(ch[i].textContent.trim())
+        }
+        document.getElementById('tag_input').value = JSON.stringify(all_tags)
         document.getElementById('contentJson').value = JSON.stringify(obj_list)
         document.getElementById('add_form').submit()
     }
 
+    $(document).ready(function() {
+        $('#Tag').select2({
+            placeholder: "Select a Tag",
+            allowClear: true
+        });
+    });
+
+    function add_tag(el){
+        console.log(el.value)
+        document.querySelector('#question_tag').innerHTML += `
+        <a href="">${ el.value} </a>
+        `;
+    }
+
+    function clear_tags(){
+        document.querySelector('#question_tag').innerHTML = "" 
+    }
 </script>
 
 

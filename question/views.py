@@ -86,4 +86,49 @@ def search_view(request:HttpRequest):
     return render(request, 'question/search.html')
 
 def add_question_view(request:HttpRequest):
-    return render(request, 'question/add_question.html')
+    all_tags = Tag.objects.all()
+    if request.method == 'POST':
+        name = request.POST['name']
+        title = request.POST['title']
+        content_json = request.POST['content_json']
+        content_list = json.loads(content_json)
+        
+        tags_json = request.POST['tags']
+        tag_list = json.loads(tags_json)
+
+        q = Question.objects.create(
+            title = title,
+            user_name = name
+        )
+        
+        for tag in tag_list:
+            add_tag = Tag.objects.get(name=tag)
+            add_tag.many_to_many.set([q])  
+        
+        for part in content_list:
+            if part['type'] == 'text':
+                QuestionPart.objects.create(
+                    question_id = q,
+                    part_type = 'text',
+                    content = part['value'],
+                    order = part['order']
+                )
+            elif part['type'] == 'code':
+                QuestionPart.objects.create(
+                    question_id = q,
+                    part_type = 'cpde',
+                    content = part['value'],
+                    order = part['order']
+                )
+            elif part['type'] == 'img':
+                format, imgstr = part['value'].split(';base64,')
+                ext = format.split('/')[-1]
+                image_file = ContentFile(base64.b64decode(imgstr), name=f'{uuid.uuid4()}.{ext}')
+                QuestionPart.objects.create(
+                    question_id = q,
+                    part_type = 'image',
+                    image = image_file,
+                    order = part['order']
+                )
+        
+    return render(request, 'question/add_question.html', {'all_tags': all_tags})

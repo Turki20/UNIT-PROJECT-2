@@ -67,7 +67,14 @@
   </footer>
 </div>
 {% block js %}
-
+<script>
+    $(document).ready(function() {
+        $('#Tag').select2({
+            placeholder: "Select a Tag",
+            allowClear: true
+        });
+    });
+</script>
 {% endblock js %}
 
 {% endblock content %}

@@ -1,0 +1,73 @@
+{% extends "generator/base.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock style %}
+
+
+{% block content %}
+
+
+<div id="main">
+    <div class="header">
+        <h1>DevCommunity</h1>
+    </div>
+
+    <div class="search_content">
+        <form action="{% url 'question:search_view' %}" method="post">
+
+            <div>
+                <input type="text" name="search" value="{{last_search}}" placeholder="Enter a question">
+                <button type="submit">Search</button>
+            </div>
+            {% csrf_token %}
+            <div>
+                <label for="Tag">
+                    Tag
+                </label>
+                <select name="tag" id="Tag">
+                    <option value="all">all</option>
+                    {% for tag in all_tags %}
+                    <option value="{{tag.name}}">{{tag.name}}</option>
+                    {% endfor %}
+                    <option value="Python">Python</option>
+                    <option value="">test</option>
+                </select>
+            </div>
+        </form>
+
+        <div class="search_container">
+            <div>
+                <h1>Result</h1>
+                <p>number of result: 12</p>
+            </div>
+            <div class="grid_container">
+                {% for obj in final_objects %}
+                    <div class="card">
+                        <h1>
+                            {{obj.question.title}}
+                        </h1>
+                        <div>
+                            {% for tag in obj.tags %}
+                            <a>{{tag.name}}</a>
+                            {% endfor %}
+                        </div>
+                        <em>{{obj.question.created_at}}</em>
+                    </div>
+                
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+    <p>Turki Ahmed</p>
+  </footer>
+</div>
+{% block js %}
+
+{% endblock js %}
+
+{% endblock content %}

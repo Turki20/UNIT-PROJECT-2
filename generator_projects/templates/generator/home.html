@@ -14,9 +14,11 @@
             <h1>DevCommunity <>
             </h1>
             <p>A platform that brings together programmers to share knowledge, code, and solve problems together.</p>
-            <form action="">
-                <input type="text" placeholder="Search...">
+            <form action="{% url 'question:search_view' %}" method="post">
+                <input type="text" placeholder="Search..." name="search">
+                <input type="text" name="tag" hidden value="all">
                 <button>Search</button>
+                {% csrf_token %}
             </form>
         </div>
         <div>

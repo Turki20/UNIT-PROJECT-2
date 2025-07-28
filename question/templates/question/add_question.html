@@ -1,0 +1,141 @@
+{% extends "generator/base.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock style %}
+
+
+{% block content %}
+
+
+<div id="main">
+    <div class="header">
+        <h1>DevCommunity</h1>
+    </div>
+
+
+    <div class="ask_question_container">
+        <h1>Ask Question</h1>
+        <div class="question_card">
+            <form method="post" action="" id="add_form">
+                <label for="name">Your Name</label>
+                <input type="text" name="name" id="name" required placeholder="Enter Your Name">
+
+                <label for="title">Question Title</label>
+                <input type="text" name="title" id="title" required placeholder="Title">
+
+                <input type="hidden" name="content_json" id="contentJson">
+                <div class="btns">
+                    <button onclick="add_text()">Add Text</button>
+                    <button onclick="add_code()">Add Code</button>
+                    <button onclick="add_img()">Add Image</button>
+                </div>
+
+                <div id="form_content">
+                    
+                </div>
+
+                <button onclick="submit_form()">Ask</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>Turki Ahmed</p>
+    </footer>
+</div>
+{% block js %}
+
+<script>
+
+    form_content = document.querySelector('#form_content');
+    
+    function remove_el(el){
+        el.parentElement.remove()
+    }
+
+    function createWrapper(){
+        div = document.createElement('div')
+        span = document.createElement('span')
+        span.setAttribute('onclick', 'remove_el(this)')
+        x = document.createTextNode('✕')
+        span.appendChild(x)
+        div.appendChild(span)
+
+        return div
+    }
+
+    function add_code(){
+        div = createWrapper()
+        div.setAttribute('id', 'code')
+        textarea = document.createElement('textarea')
+        textarea.setAttribute('name', 'code')
+        textarea.setAttribute('placeholder', 'Write Code Here')
+        textarea.setAttribute('id', 'code')
+        div.appendChild(textarea)
+        form_content.appendChild(div)
+    }
+
+    function add_text(){
+        div = createWrapper()
+        div.setAttribute('id', 'text')
+        textarea = document.createElement('textarea')
+        textarea.setAttribute('name', 'text')
+        textarea.setAttribute('placeholder', 'Write text Here')
+        textarea.setAttribute('id', 'text')
+        div.appendChild(textarea)
+        form_content.appendChild(div)
+    }
+
+    function add_img(){
+        div = createWrapper()
+        div.setAttribute('id', 'img')
+        input = document.createElement('input')
+        input.setAttribute('type', 'file')
+        div.appendChild(input)
+        form_content.appendChild(div)
+    }
+
+    function submit_form(){
+        all = form_content.children
+        obj_list = []
+        order = 0
+        for(i = 0; i < all.length; i++){
+            if(all[i].id == 'text'){
+                temp = {
+                    'type': 'text',
+                    'value': all[i].lastChild.value,
+                    'order': order++
+                }
+                obj_list.push(temp)
+            }
+            if(all[i].id == 'code'){
+                temp = {
+                    'type': 'code',
+                    'value': all[i].lastChild.value,
+                    'order': order++
+                }
+                obj_list.push(temp)
+            }
+            if(all[i].id == 'img'){
+                temp = {
+                    'type': 'img',
+                    'value': all[i].lastChild.value,
+                    'order': order++
+                }
+                obj_list.push(temp)
+            }         
+        }
+
+        document.getElementById('contentJson').value = JSON.stringify(obj_list)
+        document.getElementById('add_form').submit()
+    }
+
+</script>
+
+
+{% endblock js %}
+
+{% endblock content %}

@@ -51,3 +51,39 @@ def question_detail_view(request:HttpRequest, q_id:int):
     }
     
     return render(request, 'question/detail.html', context)
+
+
+
+def search_view(request:HttpRequest):
+    all_tags = Tag.objects.all()
+    if request.method == 'POST':
+        if request.POST['tag'] == 'all':
+            search = request.POST['search']
+            question_results = Question.objects.filter(title__icontains = search)
+            final_objects = []
+            for q in question_results:
+                related_tag = Tag.objects.filter(many_to_many = q)
+                final_objects.append({
+                    'question': q,
+                    'tags': related_tag
+                })
+        else:
+            search = request.POST['search']
+            question_results = Question.objects.filter(title__icontains = search)
+            search_tag = request.POST['tag']
+            final_objects = []
+            for q in question_results:
+                related_tag = Tag.objects.filter(many_to_many = q)
+                for tag in related_tag:
+                    if tag.name == search_tag:
+                        final_objects.append({
+                            'question': q,
+                            'tags': related_tag
+                        })
+            
+        return render(request, 'question/search.html', {'final_objects': final_objects, 'last_search': search, 'all_tags': all_tags})
+    
+    return render(request, 'question/search.html')
+
+def add_question_view(request:HttpRequest):
+    return render(request, 'question/add_question.html')

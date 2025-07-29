@@ -41,22 +41,23 @@
         <div class="search_container">
             <div>
                 <h1>Result</h1>
-                <p>number of result: 12</p>
+                <p>number of result: {{count}}</p>
             </div>
             <div class="grid_container">
                 {% for obj in final_objects %}
+                <a href="{% url 'question:question_detail_view' obj.question.id %}" class="card-link">
                     <div class="card">
                         <h1>
                             {{obj.question.title}}
                         </h1>
                         <div>
                             {% for tag in obj.tags %}
-                            <a>{{tag.name}}</a>
+                                <div class="a">{{tag.name}}</div>
                             {% endfor %}
                         </div>
                         <em>{{obj.question.created_at}}</em>
                     </div>
-                
+                </a>
                 {% endfor %}
             </div>
         </div>

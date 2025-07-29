@@ -1,6 +1,10 @@
+{% extends "generator/base.html" %}
 
-
-<h1 style="width: 100%; min-height: 100vh; color: green; padding: 50px; text-align: center;">
-    تم انشاء المشروع 
-    {{repo_response}}
+{% block content %}
+  <h1 style="width: 100%; min-height: 100vh; color: green; padding: 50px; text-align: center; display: flex; flex-direction: column; gap: 50px;">
+    <a style="padding: 50px; background-color: lavender; color: black; border-radius: 10px; text-decoration: none; text-align: center;" href="{% url 'generator:home_view' %}">home</a>
+The project has been created
 </h1>
+
+
+{% endblock content %}

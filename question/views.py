@@ -37,7 +37,20 @@ def question_detail_view(request:HttpRequest, q_id:int):
         answers_parts = AnswerPart.objects.filter(answer_id = answer.id).order_by('order')
         final_anwers.append({'answer': answer, 'answers_parts': answers_parts})
 
-    related_questions = Question.objects.all() # غيرها بعدين 
+    related_questions = Question.objects.filter(
+        tag__in=tags
+    ).exclude(
+        id=q_id
+    ).distinct().order_by('-created_at')[:6]
+    
+    
+    if len(related_questions) < 6:
+        remaining = 6 - len(related_questions)
+        latest_questions = Question.objects.exclude(
+            id__in=[q.id for q in related_questions] + [q_id]
+        ).order_by('-created_at')[:remaining]
+        related_questions = list(related_questions) + list(latest_questions)  
+          
     all_tags = Tag.objects.all()[:10]
     
     print(tags)
@@ -51,8 +64,6 @@ def question_detail_view(request:HttpRequest, q_id:int):
     }
     
     return render(request, 'question/detail.html', context)
-
-
 
 def search_view(request:HttpRequest):
     all_tags = Tag.objects.all()
@@ -81,9 +92,24 @@ def search_view(request:HttpRequest):
                             'tags': related_tag
                         })
             
-        return render(request, 'question/search.html', {'final_objects': final_objects, 'last_search': search, 'all_tags': all_tags})
+        return render(request, 'question/search.html', {'final_objects': final_objects, 'last_search': search, 'all_tags': all_tags, 'count': len(final_objects)})
     
     return render(request, 'question/search.html')
+
+def tag_search_view(request:HttpRequest, tag_id):
+    all_tags = Tag.objects.all()
+    search = ""
+    final_objects = []
+    tag = Tag.objects.get(pk = tag_id)
+    questions = tag.many_to_many.all().order_by('-created_at')  
+    for q in questions:
+        related_tag = Tag.objects.filter(many_to_many = q)
+        final_objects.append({
+            'question': q,
+            'tags': related_tag
+        }) 
+    return render(request, 'question/search.html', {'final_objects': final_objects, 'last_search': search, 'all_tags': all_tags, 'count': len(final_objects)})
+
 
 def add_question_view(request:HttpRequest):
     all_tags = Tag.objects.all()
@@ -103,7 +129,7 @@ def add_question_view(request:HttpRequest):
         
         for tag in tag_list:
             add_tag = Tag.objects.get(name=tag)
-            add_tag.many_to_many.set([q])  
+            add_tag.many_to_many.add(q.id)  
         
         for part in content_list:
             if part['type'] == 'text':

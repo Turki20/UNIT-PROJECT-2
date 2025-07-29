@@ -3,10 +3,18 @@ from django.http import HttpRequest, HttpResponse
 import requests, os, base64, shutil
 from django.conf import settings
 
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+
+base_dir = Path(__file__).resolve().parent.parent  # parent of github folder (i.e., project/)
+env_path = base_dir / 'env' / '.env'
+
+load_dotenv(dotenv_path=env_path)
 
 # بعدين خزنها بشكل سري
-CLIENT_ID = 'Ov23livc34ewoB4lkDc9'
-CLIENT_SECRET = '1746c985b0e0b1f4335dd4a2b01dbcbd20666fa7'
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 # Create your views here.
 
 def github_login(request, project_name):
@@ -82,4 +90,4 @@ def github_callback(request:HttpRequest):
         print(f"Error deleting project directory: {e}")
 
 
-    return render(request, 'github/index.html', {'repo_response': repo_response})
+    return render(request, 'github/index.html')

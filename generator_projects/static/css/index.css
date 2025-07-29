@@ -292,7 +292,7 @@ main .form div:last-child button {
     font-size: 2rem;
     align-items: center;
     color: var(--w_color);
-    background-color: var(--b_color);
+    background-color: var(--p_color);
     z-index: 500;
     box-shadow: 0px 6px var(--p_color), 0px 12px var(--o_color), 0px 18px var(--y_color); 
 }
@@ -357,7 +357,7 @@ main .form div:last-child button {
     justify-content: center;
     align-items: start;
     /* gap: 20px; */
-    background-color: var(--o_color);
+    
 }
 
 .container .question_section {
@@ -376,9 +376,9 @@ main .form div:last-child button {
     top: -25px;
     left: 20px;
     padding: 10px 20px;
-    background-color: var(--o_color);
+    background-color: var(--y_color);
     border-radius: 10px;
-    color: var(--wh_color);
+    color: var(--o_color);
     z-index: 501;
 }
 
@@ -422,8 +422,8 @@ main .form div:last-child button {
 }
 
 .container .category_section {
-    width: 30%;
-    background-color: var(--o_color);
+    width: 25%;
+    background-color: var(--w_color);
     color: var(--b_color);
     padding: 60px 30px;
     display: grid;
@@ -445,17 +445,9 @@ main .form div:last-child button {
     width: 100%;
     border-radius: 50px;
     text-align: center;
-
+    font-size: 1.5rem;
 }
 
-.container .category_section a:nth-child(2){
-    background-color: var(--y_color);
-    color: var(--o_color);
-}
-
-.container .category_section a:last-child{
-    background-color: var(--p_color);
-}
 
 #main footer {
     width: 100%;
@@ -788,6 +780,8 @@ main .form div:last-child button {
     flex-direction: column;
     gap: 20px;
     width: 100%;
+    font-size: 1.2rem;
+    font-family: 'MyFontLight';
 }
 
 #main .search_content .search_container .grid_container {
@@ -814,7 +808,7 @@ main .form div:last-child button {
     gap: 10px;
 }
 
-#main .search_content .search_container .card div a {
+#main .search_content .search_container .card div .a {
     padding: 5px 10px;
     background-color: var(--p_color);
     color: white;
@@ -986,4 +980,94 @@ main .form div:last-child button {
     justify-content: start;
     align-items: center;
     width: 100%;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+
+@media screen and (max-width: 900px){
+    #main #main_section {
+        height: auto;
+        flex-direction: column;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container .question_section {
+        width: 90%;
+    }
+
+    #main .content .related_questions {
+        width: 100%;
+    }
+
+    #main .question_content {
+        width: 100%;
+    }
+
+    #main .category{
+        width: 100%;
+        padding: 0 30px 50px 30px;
+        grid-template-columns: 1fr 1fr;
+    }
+    .container .question_section .q_grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .container .category_section {
+        width: 90%;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    #main .content {
+        flex-direction: column;
+    }
+
+    #main .search_content form div:first-child {
+        width: 100%;
+    }
+
+    #main .search_content form div:last-child{
+        width: 100%;
+    }
+
+    #main .search_content .search_container .grid_container {
+        grid-template-columns: 1fr;
+    }
+
+    #main .ask_question_container .question_card{
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 600px){
+    #main #main_section {
+        height: auto;
+        flex-direction: column;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container .question_section {
+        width: 90%;
+    }
+
+    .container .question_section .q_grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container .category_section {
+        width: 90%;
+        grid-template-columns: 1fr 1fr;
+    }
 }

@@ -38,8 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'generator_projects',
-    'list_projects',
-    'core',
     'github',
     'question',
     'answer',

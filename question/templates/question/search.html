@@ -47,9 +47,9 @@
                 {% for obj in final_objects %}
                 <a href="{% url 'question:question_detail_view' obj.question.id %}" class="card-link">
                     <div class="card">
-                        <h1>
+                        <h2>
                             {{obj.question.title}}
-                        </h1>
+                        </h2>
                         <div>
                             {% for tag in obj.tags %}
                                 <div class="a">{{tag.name}}</div>

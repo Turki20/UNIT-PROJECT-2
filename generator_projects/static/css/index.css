@@ -1045,6 +1045,29 @@ main .form div:last-child button {
     #main .ask_question_container .question_card{
         width: 80%;
     }
+
+    main .title {
+        font-size: 7.8rem;
+    }
+
+    main .main_sections>div {
+        width: 60vw;
+        height: 26vh;
+    }
+
+    main .main_sections {
+        flex-direction: column;
+    }
+
+    main .logo {
+        width: 25%;
+        z-index: 501;
+    }
+
+    main .form {
+        width: 80%;
+    }
+
 }
 
 @media screen and (max-width: 600px){

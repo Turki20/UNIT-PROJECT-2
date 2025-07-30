@@ -294,3 +294,13 @@ main .grid_container .grid_card {
 #app input, #app select {
     border: 2px solid var(--w_color);
 }
+
+@media screen and (max-width: 900px) {
+    main .grid_container {
+        grid-template-columns: 1fr;
+    }
+
+    main #footer button {
+        width: 25%;
+    }
+}

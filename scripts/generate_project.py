@@ -16,14 +16,29 @@ class Project:
         self.models = models
         self.current_path = ''
         
-    
     def create_project(self):
-        result_project = subprocess.run(["django-admin", "startproject", self.project_name], capture_output=True, text=True, cwd=USER_PROJECTS_DIR)
+        os.makedirs(USER_PROJECTS_DIR, exist_ok=True)
+
+        result_project = subprocess.run(
+            ["django-admin", "startproject", self.project_name],
+            capture_output=True,
+            text=True,
+            cwd=USER_PROJECTS_DIR
+        )
 
         if result_project.returncode == 0:
             return True
         else:
+            print("Project creation failed:", result_project.stderr)
             return False
+    
+    # def create_project(self):
+    #     result_project = subprocess.run(["django-admin", "startproject", self.project_name], capture_output=True, text=True, cwd=USER_PROJECTS_DIR)
+
+    #     if result_project.returncode == 0:
+    #         return True
+    #     else:
+    #         return False
         
     def create_apps(self):
         state = True

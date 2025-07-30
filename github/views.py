@@ -13,8 +13,8 @@ env_path = base_dir / 'env' / '.env'
 load_dotenv(dotenv_path=env_path)
 
 # بعدين خزنها بشكل سري
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+CLIENT_ID = os.environ['CLIENT_ID']
+CLIENT_SECRET = os.environ['CLIENT_SECRET']
 # Create your views here.
 
 def github_login(request, project_name):

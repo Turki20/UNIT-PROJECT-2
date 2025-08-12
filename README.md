@@ -22,9 +22,6 @@ DevCommunity is a collaborative platform designed for developers to ask technica
 ### ERD:
 <img width="1619" height="916" alt="image" src="https://github.com/user-attachments/assets/2280378f-1fc6-4f01-b58e-868bd7308538" />
 
-## Wireframe
-
-[WireFrame.pdf](https://github.com/user-attachments/files/21478927/WireFrame.pdf)
 
 ---
 
